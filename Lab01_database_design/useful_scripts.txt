@@ -1,0 +1,122 @@
+Scripts used for clothes_company_DB:
+
+-- creating the table with 4 columns (attributes ER)
+create table production_factories
+(
+	factory_name varchar(50),
+	factory_location varchar(50),
+	material_supplier varchar(50),
+	nr_employees int
+)
+
+-- inserting 3 instances in the table (entities ER)
+insert into dbo.production_factories
+(factory_name,factory_location,material_supplier,nr_employees)
+	values	('Clothes Gene SA','C423 Ringarooma Tasmania','Fast Cotton SRL-D',344);
+insert into dbo.production_factories
+(factory_name,factory_location,material_supplier,nr_employees)
+	values	('Clothx SRL','44 Via Lardona, Cavinati, Veneto','Fast Cotton SRL-D',20);
+insert into dbo.production_factories
+(factory_name,factory_location,material_supplier,nr_employees)
+	values	('Clothworks SA','D805 Yozgat','Fast Cotton SRL-D',78);
+
+-- selecting the entire table (visualise)
+select *
+from production_factories
+
+-- using the "where" statement to filter
+-- also using operators such as "=" or "like"
+select factory_location,nr_employees
+from production_factories
+where nr_employees=20 and factory_location='44 Via Lardona, Cavinati, Veneto'
+
+-- updating one instance from the table
+update production_factories
+Set nr_employees=22
+where nr_employees=20;
+
+-- add a column to the table
+alter table production_factories
+add test_add varchar(40);
+
+-- deleting the whole table content
+delete production_factories;
+
+-- creates a new table where pid is a "Primary Key" (meaning unique) and will start from 1 and increase by one after each add operation
+create table production_factories
+(
+	pid varchar(5) Primary Key identity(1,1)
+	factory_name varchar(50),
+	factory_location varchar(50),
+	nr_employees int
+)
+
+
+-- product Table creation
+create table product
+(
+	code int Primary Key identity(100,3),
+	product_name varchar(20),
+	price int
+)
+
+insert into product
+(product_name,price)
+values('Blue Jeans Slim Fit',45);
+
+insert into product
+(product_name,price)
+values('Simple White T-Shirt',15);
+
+insert into product
+(product_name,price)
+values('Winter Camo Jacket',155);
+
+-- clients Table creation
+create table clients
+(
+	CNP int Primary Key identity(504080,143),
+	age int,
+	first_name varchar(20),
+	last_name varchar(20)
+)
+
+insert into clients 
+(age,first_name,last_name)
+values(20,'Brad','Goff');
+
+insert into clients 
+(age,first_name,last_name)
+values(23,'Jayde','Kline');
+
+insert into clients 
+(age,first_name,last_name)
+values(28,'Elsa','Hal');
+
+-- orders Table creation
+create table orders
+(
+	oid int Primary Key identity(9,1),
+	order_date datetime,
+	customer_CNP int,
+	product_code int
+)
+
+insert into orders
+(order_date, customer_CNP, product_code)
+values (GETDATE(),504080, 100);
+
+-- bad data :(
+insert into orders
+(order_date, customer_CNP, product_code)
+values (GETDATE(),50408, 100);
+
+delete orders
+where oid=10
+
+-- we place the foreign keys in order not to allow the use of a non existent client or product
+alter table orders
+add foreign key (customer_CNP) references clients(CNP);
+
+alter table orders
+add foreign key (product_code) references product(code);
